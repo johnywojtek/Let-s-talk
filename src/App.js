@@ -7,7 +7,26 @@ class Item extends Component {
         super(props);
         this.state = {};
     }
+
     render() {
+        let database = firebase.database();
+
+        let ref = database.ref("name");
+
+        ref.on("value", gotData, errData);
+        function gotData(data) {
+            console.log(data);
+
+            let arr = [];
+
+            data.forEach(function(child) {
+                arr.push(child.val());
+            });
+        }
+        function errData(e) {
+            console.log("Uwaga error");
+            console.log(e);
+        }
         return (
             <div>
                 <h1>{this.state.name}</h1>
@@ -34,22 +53,17 @@ class App extends Component {
         });
     };
     send = () => {
-        console.log(this.state.value);
-        console.log(this.state.valueName);
+        var data = {
+            name: this.state.valueName,
+            message: this.state.value
+        };
+
+        var database = firebase.database();
+        var ref = database.ref("name");
+
+        ref.push(data);
     };
 
-    componentDidMount() {
-        const rootRef = firebase
-            .database()
-            .ref()
-            .child("lets-talk-cd648");
-
-        const nameRef = rootRef.child("name");
-
-        nameRef.on("value", snap => {
-            console.log(snap);
-        });
-    }
     render() {
         return (
             <div>
