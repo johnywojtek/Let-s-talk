@@ -1,70 +1,87 @@
 import React, { Component } from "react";
+
 import "./App.css";
 import * as firebase from "firebase";
 
-class Item extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    render() {
-        let database = firebase.database();
-
-        let ref = database.ref("name");
-
-        ref.on("value", gotData, errData);
-        function gotData(data) {
-            console.log(data);
-
-            let arr = [];
-
-            data.forEach(function(child) {
-                arr.push(child.val());
-            });
-        }
-        function errData(e) {
-            console.log("Uwaga error");
-            console.log(e);
-        }
-        return (
-            <div>
-                <h1>{this.state.name}</h1>
-                <p>{this.state.message}</p>
-                <p>DATA</p>
-            </div>
-        );
-    }
-}
+var config = {
+    apiKey: "AIzaSyC_i6qG2KPuM943JKE-lxjH9W3JDa74Rpc",
+    authDomain: "lets-talk-cd648.firebaseapp.com",
+    databaseURL: "https://lets-talk-cd648.firebaseio.com",
+    projectId: "lets-talk-cd648",
+    storageBucket: "lets-talk-cd648.appspot.com",
+    messagingSenderId: "180211078243"
+};
+firebase.initializeApp(config);
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = { valueName: "", value: "" };
+        this.state = {
+            message: "",
+            name: "",
+            arr: []
+        };
     }
+    //zapisuje value z inputa jako name
     onChange = e => {
         this.setState({
-            valueName: e.target.value
+            name: e.target.value
         });
     };
+    //zapisuje value z inputa jako message
     onChange2 = e => {
         this.setState({
-            value: e.target.value
+            message: e.target.value
         });
     };
+    //wysyłam do firebase obiekt który ma w sobie name z inputa i message z textarea
     send = () => {
-        var data = {
-            name: this.state.valueName,
-            message: this.state.value
-        };
-
-        var database = firebase.database();
-        var ref = database.ref("name");
-
-        ref.push(data);
+        var messageListRef = firebase.database().ref("users");
+        var newMessageRef = messageListRef.push();
+        newMessageRef.set({
+            name: this.state.name,
+            message: this.state.message
+        });
     };
 
+    componentDidMount() {
+        var database = firebase.database();
+        var ref = database.ref("users");
+        // 2:  po push-nięciu jest to tablica obiektów z których kazdy z nich ma dwie wartosci name: i message:
+
+        var test = true;
+        // funkcja która pobiera dane z firebase
+        const gotData = data => {
+            if (test === true) {
+                // 1: push-uje zapisane dane z firebase do pustej tablicy arr
+                data.forEach(child => {
+                    this.setState({
+                        arr: [...this.state.arr, child.val()]
+                    });
+                });
+                test = false;
+            }
+        };
+        ref.on("value", gotData, errData);
+
+        //funkcja która odpowada za errory (praktycznie nic nie robi bo errorów nie ma)
+        function errData(e) {
+            console.log(e);
+            console.log("dfadwfaw");
+        }
+    }
     render() {
+        console.log(this.state.arr);
+        let array = this.state.arr;
+        var list = array.map(e => {
+            return (
+                <div className="commentCont">
+                    <p className="comment__name">{e.name}</p>
+                    <p className="comment__message">{e.message}</p>
+                </div>
+            );
+        });
+
         return (
             <div>
                 <h1 className="header">Hello in let's talk... so let's talk</h1>
@@ -72,7 +89,7 @@ class App extends Component {
                     <label htmlFor="name">Your Name</label>
                     <input
                         className="input"
-                        value={this.state.valueName}
+                        value={this.state.name}
                         onChange={this.onChange}
                         type="text"
                         id="name"
@@ -82,15 +99,14 @@ class App extends Component {
                         rows="10"
                         cols="50"
                         id="message"
-                        value={this.state.value}
+                        value={this.state.message}
                         onChange={this.onChange2}
                     />
                     <button className="btn" onClick={this.send}>
                         Submit
                     </button>
                 </div>
-
-                <Item />
+                <div className="comment">{list}</div>
             </div>
         );
     }

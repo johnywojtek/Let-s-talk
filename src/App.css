@@ -37,3 +37,13 @@ body {
     border-radius: 30px;
     font-size: 20px;
 }
+.commentCont {
+    padding-bottom: 20px;
+}
+.comment__name {
+    color: greenyellow;
+    font-size: 25px;
+}
+.comment__message {
+    font-size: 18px;
+}

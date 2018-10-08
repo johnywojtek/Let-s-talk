@@ -5,6 +5,7 @@
     "dependencies": {
         "babel-preset-stage-2": "^6.24.1",
         "firebase": "^5.5.2",
+        "lodash": "^4.17.11",
         "react": "^16.5.2",
         "react-dom": "^16.5.2",
         "react-scripts": "2.0.3"
