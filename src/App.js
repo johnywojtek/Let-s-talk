@@ -17,9 +17,10 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: "",
             name: "",
-            arr: []
+            message: "",
+            arr: [],
+            data: ""
         };
     }
     //zapisuje value z inputa jako name
@@ -27,6 +28,13 @@ class App extends Component {
         this.setState({
             name: e.target.value
         });
+        var utc = new Date().toLocaleString();
+        console.log(typeof utc);
+
+        this.setState({
+            data: utc
+        });
+        console.log(this.state.data);
     };
     //zapisuje value z inputa jako message
     onChange2 = e => {
@@ -36,48 +44,52 @@ class App extends Component {
     };
     //wysyłam do firebase obiekt który ma w sobie name z inputa i message z textarea
     send = () => {
-        var messageListRef = firebase.database().ref("users");
-        var newMessageRef = messageListRef.push();
-        newMessageRef.set({
-            name: this.state.name,
-            message: this.state.message
-        });
+        if (this.state.message.length > 0 && this.state.name.length > 0) {
+            var messageListRef = firebase.database().ref("users");
+            var newMessageRef = messageListRef.push();
+
+            newMessageRef.set({
+                name: this.state.name,
+                message: this.state.message,
+                data: this.state.data
+            });
+
+            this.setState({
+                name: "",
+                message: ""
+            });
+        } else {
+            alert("Please write your name and message");
+        }
     };
 
     componentDidMount() {
         var database = firebase.database();
         var ref = database.ref("users");
-        // 2:  po push-nięciu jest to tablica obiektów z których kazdy z nich ma dwie wartosci name: i message:
 
-        var test = true;
         // funkcja która pobiera dane z firebase
         const gotData = data => {
-            if (test === true) {
-                // 1: push-uje zapisane dane z firebase do pustej tablicy arr
-                data.forEach(child => {
-                    this.setState({
-                        arr: [...this.state.arr, child.val()]
-                    });
+            data.forEach(child => {
+                this.setState({
+                    arr: [child.val(), ...this.state.arr]
                 });
-                test = false;
-            }
+            });
         };
         ref.on("value", gotData, errData);
 
-        //funkcja która odpowada za errory (praktycznie nic nie robi bo errorów nie ma)
+        //funkcja która odpowada za errory
         function errData(e) {
+            console.log("Uwaga Error !");
             console.log(e);
-            console.log("dfadwfaw");
         }
     }
     render() {
-        console.log(this.state.arr);
-        let array = this.state.arr;
-        var list = array.map(e => {
+        var list = this.state.arr.map(e => {
             return (
-                <div className="commentCont">
+                <div className="comment">
                     <p className="comment__name">{e.name}</p>
                     <p className="comment__message">{e.message}</p>
+                    <p>{e.data}</p>
                 </div>
             );
         });
@@ -106,7 +118,7 @@ class App extends Component {
                         Submit
                     </button>
                 </div>
-                <div className="comment">{list}</div>
+                <div className="commentCont">{list}</div>
             </div>
         );
     }

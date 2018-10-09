@@ -7,12 +7,13 @@ html {
     box-sizing: border-box;
 }
 body {
-    background-color: yellow;
+    background-color: #eeeeee;
 }
 .header {
     text-align: center;
     font-size: 60px;
     margin-top: 20px;
+    color: #00adb5;
     font-weight: 400;
 }
 
@@ -23,27 +24,51 @@ body {
     flex-direction: column;
     margin: auto;
 }
+label {
+    color: #00adb5;
+}
 .input {
     font-size: 20px;
     padding: 15px;
+    border: 1px solid #e3e3e3;
+
+    color: #393e46;
 }
 #message {
     padding: 15px;
     font-size: 20px;
+    border: 1px solid #e3e3e3;
+    color: #393e46;
 }
 .btn {
+    margin-top: 10px;
     width: 100px;
     padding: 10px;
-    border-radius: 30px;
+    border-radius: 10px;
     font-size: 20px;
+    background-color: #00adb5;
+    color: #fff;
+    transition: all 0.2s;
+    border: 1px solid #e3e3e3;
 }
+.btn:hover {
+    transform: scale(1.1) skew(2deg);
+}
+
 .commentCont {
-    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    margin: 100px auto;
+}
+.comment {
+    margin: 30px 0;
 }
 .comment__name {
-    color: greenyellow;
-    font-size: 25px;
+    font-weight: bold;
+    font-size: 35px;
 }
 .comment__message {
+    margin: 20px 0;
     font-size: 18px;
 }
