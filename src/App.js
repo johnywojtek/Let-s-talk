@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import Speech from "./speech";
 import "./App.css";
 import * as firebase from "firebase";
 
@@ -13,6 +13,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// speech recognition setup becouse this only work on the firefox
 class App extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,8 @@ class App extends Component {
             name: "",
             message: "",
             arr: [],
-            data: ""
+            data: "",
+            test: []
         };
     }
     //zapisuje value z inputa jako name
@@ -61,6 +63,12 @@ class App extends Component {
         } else {
             alert("Please write your name and message");
         }
+    };
+
+    onChangeMessage = msg => {
+        this.setState({
+            message: msg
+        });
     };
 
     componentDidMount() {
@@ -114,6 +122,8 @@ class App extends Component {
                         value={this.state.message}
                         onChange={this.onChange2}
                     />
+                    <Speech changeMessage={this.onChangeMessage} />
+
                     <button className="btn" onClick={this.send}>
                         Submit
                     </button>
