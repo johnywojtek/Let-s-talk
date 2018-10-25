@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //------------------------SPEECH RECOGNITION-----------------------------
 
@@ -82,31 +83,31 @@ class Speech extends Component {
 
     render() {
         return (
-            <div style={container}>
-                <button
-                    id="microphone-btn"
-                    style={button}
-                    onClick={this.toggleListen}
-                />
+            <div className="speech__btn">
+                {this.state.listening ? (
+                    <button
+                        className="microphone-btn microphone-btn-active"
+                        onClick={this.toggleListen}
+                    >
+                        <FontAwesomeIcon
+                            icon="microphone"
+                            className="talkBtn"
+                        />
+                    </button>
+                ) : (
+                    <button
+                        className="microphone-btn"
+                        onClick={this.toggleListen}
+                    >
+                        <FontAwesomeIcon
+                            icon="microphone"
+                            className="talkBtn"
+                        />
+                    </button>
+                )}
             </div>
         );
     }
 }
 
 export default Speech;
-const styles = {
-    container: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center"
-    },
-    button: {
-        width: "60px",
-        height: "60px",
-        background: "lightblue",
-        borderRadius: "50%",
-        margin: "6em 0 2em 0"
-    }
-};
-const { container, button } = styles;
