@@ -7,4 +7,4 @@
 * CSS (SASS)
 * firebase
 
-LIVE: https://letstalkabout.herokuapp.com/
+LIVE: https://letstalktoday.herokuapp.com/
